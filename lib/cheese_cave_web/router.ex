@@ -1,6 +1,8 @@
 defmodule CheeseCaveWeb.Router do
   use CheeseCaveWeb, :router
 
+  import CheeseCaveWeb.UserAuth
+
   pipeline :browser do
     plug :accepts, ["html"]
     plug :fetch_session
@@ -8,6 +10,7 @@ defmodule CheeseCaveWeb.Router do
     plug :put_root_layout, html: {CheeseCaveWeb.Layouts, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug :fetch_current_user
   end
 
   pipeline :api do
@@ -39,6 +42,44 @@ defmodule CheeseCaveWeb.Router do
 
       live_dashboard "/dashboard", metrics: CheeseCaveWeb.Telemetry
       forward "/mailbox", Plug.Swoosh.MailboxPreview
+    end
+  end
+
+  ## Authentication routes
+
+  scope "/", CheeseCaveWeb do
+    pipe_through [:browser, :redirect_if_user_is_authenticated]
+
+    live_session :redirect_if_user_is_authenticated,
+      on_mount: [{CheeseCaveWeb.UserAuth, :redirect_if_user_is_authenticated}] do
+      live "/users/register", Live.User.UserRegistrationLive, :new
+      live "/users/log_in", Live.User.UserLoginLive, :new
+      live "/users/reset_password", Live.User.UserForgotPasswordLive, :new
+      live "/users/reset_password/:token", Live.User.UserResetPasswordLive, :edit
+    end
+
+    post "/users/log_in", UserSessionController, :create
+  end
+
+  scope "/", CheeseCaveWeb do
+    pipe_through [:browser, :require_authenticated_user]
+
+    live_session :require_authenticated_user,
+      on_mount: [{CheeseCaveWeb.UserAuth, :ensure_authenticated}] do
+      live "/users/settings", Live.User.UserSettingsLive, :edit
+      live "/users/settings/confirm_email/:token", Live.User.UserSettingsLive, :confirm_email
+    end
+  end
+
+  scope "/", CheeseCaveWeb do
+    pipe_through [:browser]
+
+    delete "/users/log_out", UserSessionController, :delete
+
+    live_session :current_user,
+      on_mount: [{CheeseCaveWeb.UserAuth, :mount_current_user}] do
+      live "/users/confirm/:token", Live.User.UserConfirmationLive, :edit
+      live "/users/confirm", Live.User.UserConfirmationInstructionsLive, :new
     end
   end
 end
