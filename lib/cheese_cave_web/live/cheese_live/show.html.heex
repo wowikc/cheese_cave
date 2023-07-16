@@ -13,6 +13,13 @@
   <:item title="Cheese name"><%= @cheese.cheese_name %></:item>
   <:item title="Press done date"><%= @cheese.press_done_date %></:item>
   <:item title="Start aging date"><%= @cheese.start_aging_date %></:item>
+  <:item title="Photos">
+    <%= for photo <- @cheese.photos do %>
+      <img
+        alt="image" width="200" height="200"
+        src={"#{photo}"} />
+    <% end %>
+    </:item>
 </.list>
 
 <.back navigate={~p"/cheeses"}>Back to cheeses</.back>

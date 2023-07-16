@@ -8,13 +8,15 @@ defmodule CheeseCave.Cheeses.Cheese do
     field :press_done_date, :date
     field :start_aging_date, :date
 
+    field :photos, {:array, :string}
+
     timestamps()
   end
 
   @doc false
   def changeset(cheese, attrs) do
     cheese
-    |> cast(attrs, [:name, :cheese_name, :press_done_date, :start_aging_date])
+    |> cast(attrs, [:name, :cheese_name, :press_done_date, :start_aging_date, :photos])
     |> validate_required([
       :name
       # :cheese_name,

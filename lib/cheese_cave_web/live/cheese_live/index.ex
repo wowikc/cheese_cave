@@ -6,7 +6,9 @@ defmodule CheeseCaveWeb.CheeseLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, stream(socket, :cheeses, Cheeses.list_cheeses())}
+    {:ok,
+     socket
+     |> stream(:cheeses, Cheeses.list_cheeses())}
   end
 
   @impl true
