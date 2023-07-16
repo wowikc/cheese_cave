@@ -1,0 +1,44 @@
+<.header>
+  Listing Cheeses
+  <:actions>
+    <.link patch={~p"/cheeses/new"}>
+      <.button>New Cheese</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table
+  id="cheeses"
+  rows={@streams.cheeses}
+  row_click={fn {_id, cheese} -> JS.navigate(~p"/cheeses/#{cheese}") end}
+>
+  <:col :let={{_id, cheese}} label="Name"><%= cheese.name %></:col>
+  <:col :let={{_id, cheese}} label="Cheese name"><%= cheese.cheese_name %></:col>
+  <:col :let={{_id, cheese}} label="Press done date"><%= cheese.press_done_date %></:col>
+  <:col :let={{_id, cheese}} label="Start aging date"><%= cheese.start_aging_date %></:col>
+  <:action :let={{_id, cheese}}>
+    <div class="sr-only">
+      <.link navigate={~p"/cheeses/#{cheese}"}>Show</.link>
+    </div>
+    <.link patch={~p"/cheeses/#{cheese}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={{id, cheese}}>
+    <.link
+      phx-click={JS.push("delete", value: %{id: cheese.id}) |> hide("##{id}")}
+      data-confirm="Are you sure?"
+    >
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+<.modal :if={@live_action in [:new, :edit]} id="cheese-modal" show on_cancel={JS.patch(~p"/cheeses")}>
+  <.live_component
+    module={CheeseCaveWeb.CheeseLive.FormComponent}
+    id={@cheese.id || :new}
+    title={@page_title}
+    action={@live_action}
+    cheese={@cheese}
+    patch={~p"/cheeses"}
+  />
+</.modal>

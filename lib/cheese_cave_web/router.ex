@@ -68,6 +68,13 @@ defmodule CheeseCaveWeb.Router do
       on_mount: [{CheeseCaveWeb.UserAuth, :ensure_authenticated}] do
       live "/users/settings", Live.User.UserSettingsLive, :edit
       live "/users/settings/confirm_email/:token", Live.User.UserSettingsLive, :confirm_email
+
+      live "/cheeses", CheeseLive.Index, :index
+      live "/cheeses/new", CheeseLive.Index, :new
+      live "/cheeses/:id/edit", CheeseLive.Index, :edit
+
+      live "/cheeses/:id", CheeseLive.Show, :show
+      live "/cheeses/:id/show/edit", CheeseLive.Show, :edit
     end
   end
 
