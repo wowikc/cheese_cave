@@ -54,9 +54,10 @@ defmodule CheeseCaveWeb.CheeseLive.FormComponent do
             </p>
             <.live_img_preview entry={entry} class="preview" />
 
-            <p>Errors do not work for some reason :)</p>
             <div :for={err <- upload_errors(@uploads.photos, entry)} class="alert alert-danger">
-              <%= error_to_string(err) %>
+              <div class="alert alert-danger">
+                <%= error_to_string(err) %>
+              </div>
             </div>
           <% end %>
         </section>
@@ -77,6 +78,8 @@ defmodule CheeseCaveWeb.CheeseLive.FormComponent do
      |> assign_form(changeset)
      |> allow_upload(:photos,
        accept: ~w(.jpg .jpeg .png),
+       #  25 MB
+       max_file_size: round(25 * 1024 * 1024),
        max_entries: 2
      )}
   end
@@ -138,9 +141,9 @@ defmodule CheeseCaveWeb.CheeseLive.FormComponent do
     end
   end
 
-  def error_to_string(:too_large), do: "image selected is too large"
-  def error_to_string(:not_accepted), do: "unacceptable file type"
-  def error_to_string(:too_many_files), do: "you have selected too many files"
+  def error_to_string(:too_large), do: "File selected is too large"
+  def error_to_string(:not_accepted), do: "Unacceptable file type"
+  def error_to_string(:too_many_files), do: "You have selected too many files"
 
   defp assign_form(socket, %Ecto.Changeset{} = changeset) do
     assign(socket, :form, to_form(changeset))
