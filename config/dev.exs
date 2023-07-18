@@ -2,9 +2,10 @@ import Config
 
 # Configure your database
 config :cheese_cave, CheeseCave.Repo,
-  username: "postgres",
-  password: "postgres",
+  username: "user",
+  password: "pass",
   hostname: "localhost",
+  port: 2345,
   database: "cheese_cave_dev",
   stacktrace: true,
   show_sensitive_data_on_connection_error: true,
