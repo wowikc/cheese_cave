@@ -1,5 +1,7 @@
 # CheeseCave
 
+## A Project to help manage cheese maturation in a fridge cave.
+
 To start your Phoenix server:
 
   * Run `mix setup` to install and setup dependencies
