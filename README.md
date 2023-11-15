@@ -1,8 +1,9 @@
 # CheeseCave
 
-## A Project to help manage cheese maturation in a fridge cave.
+A Project to help manage cheese maturation in a fridge cave. It will allow adding ready to mature cheese into the system to track the length of maturation and results.
 
-To start your Phoenix server:
+
+## To start your Phoenix server:
 
   * Run `mix setup` to install and setup dependencies
   * Start Phoenix endpoint with `mix phx.server` or inside IEx with `iex -S mix phx.server`
